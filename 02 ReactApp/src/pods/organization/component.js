@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+const MemberListItem = ({member}) => (
+    <li>
+        <span>{member.login}</span>
+    </li>  
+);
+
+
 export class OrganizationComponent extends Component {
 
   componentDidMount() {
@@ -12,9 +19,7 @@ export class OrganizationComponent extends Component {
       <ul>
       {
         this.props.members.map((member) => 
-         <li key={member.id}>
-           <span>{member.login}</span>
-         </li>                  
+         <MemberListItem key={member.id} member={member} />
         )
       }
       </ul>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { OrganizationContainer } from './pods/organization'
+import { OrganizationContainer } from './pods/organization/container'
 
 class App extends Component {
 
