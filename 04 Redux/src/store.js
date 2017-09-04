@@ -1,11 +1,11 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { combineReducers } from 'redux';
 import {organizationReducer} from './pods/organization'
-import * as thunk from 'redux-thunk';
+import reduxThunk from 'redux-thunk';
 
 export default function configureStore(initialState = {}) {
   const middlewares = [
-    thunk    
+    reduxThunk    
   ];
 
   const enhancers = [

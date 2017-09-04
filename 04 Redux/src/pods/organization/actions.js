@@ -14,6 +14,6 @@ export const loadMembersRequest = () => (dispatcher) =>{
 export const loadMemberRequestCompleted = (members) => {
     return {
         type: actionsDefs.LOAD_MEMBERS_REQUEST_COMPLETED,
-        members: members
+        payload: members
     }
 }
