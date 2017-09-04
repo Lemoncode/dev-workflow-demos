@@ -1,9 +1,11 @@
-import {actionsDefs} from './const'
+import { actionsDefs } from './const'
 
-export const organizationReducer = (action, state = []) => {
+export const organizationReducer = (state = [], action) => {
   switch(action.type) {
-      case actionsDefs.LOAD_MEMBERS:
-        state = actionDefs.payload;
+      case actionsDefs.LOAD_MEMBERS_REQUEST_COMPLETED:
+        state = action.payload;
       break;
   }
+
+  return state;
 }
