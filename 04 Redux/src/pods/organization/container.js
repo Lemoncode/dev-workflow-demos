@@ -1,33 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { OrganizationComponent } from './component'
-import { fetchMembers } from '../../rest-api'
+import { loadMembersRequest } from './actions';
 
-export class OrganizationContainer extends Component {
 
-  constructor(props) {
-    super(props);  
 
-    this.state = {
-      members : [],
-    }    
-  }
+const mapStateToProps = (state) => ({
+  members: state.organization,
+});
 
-  fetchTeamMembers = () => {
-    fetchMembers().then((members) =>
-      this.setState({
-        members: members,
-      })
-    );
-  }  
+const mapDispatchToProps = (dispatch) => ({
+    fetchMembers: () => dispatch(loadMembersRequest())  
+})
 
-  render() {
-    return (
-      <OrganizationComponent
-        members={this.state.members}
-        fetchMembers={this.fetchTeamMembers}
-      />
-    );
-  }
-}
+export const OrganizationContainer = connect(mapStateToProps,
+                                             mapDispatchToProps,
+                                            )(OrganizationComponent);
 
 export default OrganizationContainer;
