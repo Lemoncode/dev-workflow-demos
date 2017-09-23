@@ -23,9 +23,8 @@ export class OrganizationContainer extends Component {
     });
   }
 
-  render(){ return (
-    <InnerOrganizationContainer repos={this.state.repos} fetchRepos={this.fetchRepos}/>
-  )}
+  render = () =>
+    <InnerOrganizationContainer repos={this.state.repos} fetchRepos={this.fetchRepos}/>  
 }
 
 export default OrganizationContainer;
