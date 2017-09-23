@@ -13,6 +13,7 @@
    - Should container actions and reducers for both teams and repos.
 - Github API file already created.
 
+- ZOOM IT !!
 
 # Steps
 
