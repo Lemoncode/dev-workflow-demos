@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 const MemberListItem = ({member}) => (
     <li>
+        <img src={member.avatar_url} width={30} height={30}/>
         <span>{member.login}</span>
     </li>
 );
@@ -16,8 +17,8 @@ const RepoListItem = ({repo}) => (
 );
 
 const Organization = ({members, repos}) => (
-    <div>
-        <ul>
+    <div className={'organization'}>
+        <ul className={'card'}>
             {
                 members.map((member) =>
                     <MemberListItem key={member.id} member={member} />
@@ -25,7 +26,7 @@ const Organization = ({members, repos}) => (
             }
         </ul>
         <br/>
-        <ul>
+        <ul className={'card'}>
             {
                 repos.map((repo) =>
                     <RepoListItem key={repo.id} repo={repo} />
@@ -61,7 +62,7 @@ const enhance = compose(
     //     }
     // }),
     //#3 Wait till props exists
-    showLoader((props) => !props.members || !props.repos),
+    showLoader((props) => !props.members.length || !props.repos),
     //#2 Wait till props have length
 
     //#6

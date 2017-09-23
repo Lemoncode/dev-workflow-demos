@@ -46,7 +46,6 @@ const InnerOrganizationContainer = compose(
         componentDidMount() {
             this.props.fetchMembers();
             this.props.fetchRepos();
-
         }
     }),
 )(OrganizationComponent);
