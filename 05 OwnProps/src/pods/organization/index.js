@@ -1,0 +1,1 @@
+export { organizationReducer } from './reducers';
