@@ -1,52 +1,80 @@
-import React, { Component } from 'react';
+import {negate, every, flow, pick, values} from 'lodash/fp';
+import React from 'react';
+import { lifecycle, branch, compose, renderComponent } from 'recompose';
 import PropTypes from 'prop-types';
 
 const MemberListItem = ({member}) => (
     <li>
         <span>{member.login}</span>
-    </li>  
+    </li>
 );
 
 const RepoListItem = ({repo}) => (
-  <li>
-      <span>{repo.name}</span>
-  </li>  
+    <li>
+        <span>{repo.name}</span>
+    </li>
 );
 
-
-export class OrganizationComponent extends Component {
-
-  componentDidMount() {
-    this.props.fetchMembers();
-    this.props.fetchRepos();
-  }
-
-  render() {    
-    return (
-      <div>
+const Organization = ({members, repos}) => (
+    <div>
         <ul>
-        {
-          this.props.members.map((member) => 
-          <MemberListItem key={member.id} member={member} />
-          )
-        }
+            {
+                members.map((member) =>
+                    <MemberListItem key={member.id} member={member} />
+                )
+            }
         </ul>
         <br/>
         <ul>
-        {
-          this.props.repos.map((repo) => 
-          <RepoListItem key={repo.id} repo={repo} />
-          )
-        }
-        </ul>      
-      </div>
-    );
-  }
-}
+            {
+                repos.map((repo) =>
+                    <RepoListItem key={repo.id} repo={repo} />
+                )
+            }
+        </ul>
+    </div>
+);
+
+Organization.propTypes = {
+    members : PropTypes.array.isRequired,
+    repos : PropTypes.array.isRequired,
+};
+
+//Lifecoding!
+const Loader = () => <div>Loading</div>;
+const showLoader = (test) => branch(
+    test,
+    renderComponent(Loader)
+);
+const showNoData = (test) => branch(
+    test,
+    renderComponent(() => <span>No Data</span>)
+);
+
+const enhance = compose(
+    //#1
+    // lifecycle({
+    //     componentDidMount() {
+    //         this.props.fetchMembers();
+    //         this.props.fetchRepos();
+    //
+    //     }
+    // }),
+    //#3 Wait till props exists
+    showLoader((props) => !props.members || !props.repos),
+    //#2 Wait till props have length
+
+    //#6
+    // showNoData((props) => !props.members.length || !props.repos.length),
+    //#7
+    showNoData((props) => !props.members.length),
+);
+
+export const OrganizationComponent = enhance(Organization);
 
 OrganizationComponent.propTypes = {
-  members : PropTypes.array.isRequired,
-  fetchMembers : PropTypes.func.isRequired,
-  repos : PropTypes.array.isRequired,
-  fetchRepos : PropTypes.func.isRequired,  
-}
+    members : PropTypes.array.isRequired,
+    fetchMembers : PropTypes.func.isRequired,
+    repos : PropTypes.array.isRequired,
+    fetchRepos : PropTypes.func.isRequired,
+};
