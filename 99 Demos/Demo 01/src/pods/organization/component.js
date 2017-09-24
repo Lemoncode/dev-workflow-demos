@@ -18,7 +18,6 @@ export class OrganizationComponent extends Component {
 
   componentDidMount() {
     this.props.fetchMembers();
-    this.props.fetchRepos();
   }
 
   render() {    
@@ -31,14 +30,6 @@ export class OrganizationComponent extends Component {
           )
         }
         </ul>
-        <br/>
-        <ul>
-        {
-          this.props.repos.map((repo) => 
-          <RepoListItem key={repo.id} repo={repo} />
-          )
-        }
-        </ul>      
       </div>
     );
   }
@@ -47,6 +38,4 @@ export class OrganizationComponent extends Component {
 OrganizationComponent.propTypes = {
   members : PropTypes.array.isRequired,
   fetchMembers : PropTypes.func.isRequired,
-  repos : PropTypes.array.isRequired,
-  fetchRepos : PropTypes.func.isRequired,  
 }

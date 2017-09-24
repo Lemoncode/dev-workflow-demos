@@ -1,14 +1,9 @@
 # Prerequisites
 
 - All code downloaded.
-- All pacakged already install.
+- All packages already install.
 - Project ran previously with no issues.
 - Always get the code + browser side by side.
-
-# Plumbing already setup 
-
-- Starting from 00 Demo Container.
-
 
 # Steps
 
