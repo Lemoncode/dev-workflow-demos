@@ -22,7 +22,7 @@ export const loadReposRequest = () => (dispatcher) =>{
   const promise = fetchRepos();
 
   promise.then(
-    (data) => dispatcher(loadMemberRequestCompleted(data))
+    (data) => dispatcher(loadReposRequestCompleted(data))
   );
 
   return promise;

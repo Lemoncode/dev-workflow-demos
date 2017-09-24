@@ -95,7 +95,6 @@ OrganizationComponent.propTypes = {
       )
     }
     </ul>      
-  </div>
 ```
 
 > For the sake of this demo, we have already created RepoListItem stateless component.
@@ -159,10 +158,11 @@ _./src/organization/reducers.js_
 
 //(...)
 
-const mapStateToProps = (state, ownProps) => ({
+-const mapStateToProps = (state, ownProps) => ({
++const mapStateToProps = (state) => ({
 -  ...ownProps,
   members: state.organization,
--  repos: state.repos,
++  repos: state.repo,
 });
 
 const mapDispatchToProps = (dispatch) => ({
