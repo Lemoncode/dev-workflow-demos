@@ -16,7 +16,7 @@ export class OrganizationComponent extends Component {
 
   render() {    
     return (
-      <ul>
+      <ul className="card">
       {
         this.props.members.map((member) => 
          <MemberListItem key={member.id} member={member} />

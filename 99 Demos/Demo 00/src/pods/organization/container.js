@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import defaultAvatar from '../../avatar.png';
 import { OrganizationComponent } from './component'
 
 export class OrganizationContainer extends Component {
