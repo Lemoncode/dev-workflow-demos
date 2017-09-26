@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 const MemberListItem = ({member}) => (
-    <li>
-        <span>{member.login}</span>
-    </li>  
+  <li>
+      <img src={member.avatar_url} width={30} height={30}/>
+      <span>{member.login}</span>
+  </li>  
 );
 
 const RepoListItem = ({repo}) => (
@@ -23,7 +24,7 @@ export class OrganizationComponent extends Component {
   render() {    
     return (
       <div>
-        <ul>
+        <ul className="card">
         {
           this.props.members.map((member) => 
           <MemberListItem key={member.id} member={member} />
