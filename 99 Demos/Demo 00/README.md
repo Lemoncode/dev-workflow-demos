@@ -13,7 +13,6 @@
    - Should container actions and reducers for both teams and repos.
 - Github API file already created.
 
-- ZOOM IT !!
 
 # Steps
 
@@ -34,7 +33,13 @@
 
 - Implement a hardcode solutions for the FetchTeamMembers
 
+_./src/pods/organization/container.js_
+
 ```diff
++ import defaultAvatar from '../../avatar.png';
+
+//...
+
 export class OrganizationContainer extends Component {
 
   constructor(props) {
@@ -48,9 +53,22 @@ export class OrganizationContainer extends Component {
   fetchTeamMembers = () => {
 +    this.setState({
 +      members: [
-+        { login: 'john' },
-+        { login: 'peter' },
-+        { login: 'mark' },
++        { 
++          id: 1,
++          login: 'John',
++          avatar_url: defaultAvatar,
++        },
++        { 
++          id: 2,  
++          login: 'Peter',
++          avatar_url:  defaultAvatar,
++        },
++        { 
++          id: 3,    
++          login: 'Mark',
++          avatar_url:  defaultAvatar,
++        },
++
 +      ],
 +    })
   }  
@@ -98,25 +116,25 @@ _./src/pods/organization/reducers.js_
 
 - Replace our ReactContainer with a ReduxContainer (mapToProps, DispatchToProps)...
 
-```javascript
+```diff
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
++ import { connect } from 'react-redux';
 import { OrganizationComponent } from './component'
-import { loadMembersRequest } from './actions';
++ import { loadMembersRequest } from './actions';
 
 
 
-const mapStateToProps = (state) => ({
-  members: state.organization,
-});
++ const mapStateToProps = (state) => ({
++  members: state.organization,
++ });
 
-const mapDispatchToProps = (dispatch) => ({
-    fetchMembers: () => dispatch(loadMembersRequest())  
-})
++const mapDispatchToProps = (dispatch) => ({
++    fetchMembers: () => dispatch(loadMembersRequest())  
++ })
 
-export const OrganizationContainer = connect(mapStateToProps,
-                                             mapDispatchToProps,
-                                            )(OrganizationComponent);
++ export const OrganizationContainer = connect(mapStateToProps,
++                                             mapDispatchToProps,
++                                            )(OrganizationComponent);
 
 export default OrganizationContainer;
 ```
