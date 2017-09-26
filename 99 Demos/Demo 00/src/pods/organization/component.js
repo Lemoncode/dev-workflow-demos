@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 const MemberListItem = ({member}) => (
     <li>
+        <img src={member.avatar_url} width={30} height={30}/>
         <span>{member.login}</span>
     </li>  
 );
