@@ -16,6 +16,8 @@ What?! We have already redux in there, can we continue using our progressive app
 
 - Rename Container to InnerContainer.
 
+_./src/pods/container.js_
+
 ```diff
 - const OrganizationContainer = connect(mapStateToProps,
 + const InnerOrganizationContainer = connect(mapStateToProps,
@@ -64,6 +66,8 @@ export class OrganizationContainer extends Component {
 ```
 
 - Now we need to define this props in the presentational component
+
+_./src/pods/organization/component.js_
 
 ```diff
 OrganizationComponent.propTypes = {
