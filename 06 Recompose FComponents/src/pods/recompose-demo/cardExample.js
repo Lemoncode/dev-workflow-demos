@@ -8,15 +8,14 @@ export default class TitledCard extends React.Component {
     render () {
         const {title, text} = this.props;
         const {isOpen} = this.state;
-        const {setOpen} = this;
 
         return (
             <Card>
-                <Title setOpen={setOpen} title={title}/>
+                <Title toggleOpen={this.toggleOpen} title={title}/>
                 <Body isOpen={isOpen}>{text}</Body>
             </Card>
         );
     }
 
-    setOpen = (value) => this.setState({isOpen: value});
+    toggleOpen = () => this.setState({isOpen: !this.state.isOpen});
 }

@@ -4,18 +4,16 @@ export const organizationReducer = (state = [], action) => {
   switch(action.type) {
       case actionsDefs.LOAD_MEMBERS_REQUEST_COMPLETED:
         return action.payload;
-      break;
+      default:
+        return state;
   }
-
-  return state;
 };
 
 export const repoReducer = (state = [], action) => {
   switch(action.type) {
       case actionsDefs.LOAD_REPOS_REQUEST_COMPLETED:
         return action.payload;
-      break;
+      default:
+          return state;
   }
-
-  return state;
 };
