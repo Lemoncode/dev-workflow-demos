@@ -1,5 +1,5 @@
 import { actionsDefs } from './const';
-import {fetchMembers} from '../../rest-api'
+import {fetchMembers, fetchRepos} from '../../rest-api'
 
 export const loadMembersRequest = () => (dispatcher) =>{
   const promise = fetchMembers();
@@ -15,5 +15,22 @@ export const loadMemberRequestCompleted = (members) => {
     return {
         type: actionsDefs.LOAD_MEMBERS_REQUEST_COMPLETED,
         payload: members
+    }
+}
+
+export const loadReposRequest = () => (dispatcher) =>{
+  const promise = fetchRepos();
+
+  promise.then(
+    (data) => dispatcher(loadReposRequestCompleted(data))
+  );
+
+  return promise;
+}
+
+export const loadReposRequestCompleted = (repos) => {
+    return {
+        type: actionsDefs.LOAD_REPOS_REQUEST_COMPLETED,
+        payload: repos
     }
 }

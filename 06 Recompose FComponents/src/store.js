@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { combineReducers } from 'redux';
-import {organizationReducer} from './pods/organization'
+import {organizationReducer, repoReducer} from './pods/organization'
 import reduxThunk from 'redux-thunk';
 
 export default function configureStore(initialState = {}) {
@@ -28,5 +28,6 @@ export default function configureStore(initialState = {}) {
 function createReducer() {
   return combineReducers({
     organization : organizationReducer,
+    repo : repoReducer,
   });
 }

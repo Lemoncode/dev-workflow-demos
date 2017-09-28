@@ -1,1 +1,1 @@
-export { organizationReducer } from './reducers';
+export { organizationReducer, repoReducer } from './reducers';
