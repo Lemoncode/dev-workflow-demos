@@ -12,15 +12,20 @@ const mockedRepos = [{
   name: 'Offline Repo 1',
 }];
 
+const handleReposne = (mock) => (response) => {
+  return response.status > 400 ? mock : response.json();
+};
+
+//TODO WJ: Catch status 403, Return mock!
 export const fetchMembers = () => {
   return fetch(membersURL)
-    .then((response) => response.json())
+    .then(handleReposne(mockedMembers))
     .catch(() => mockedMembers);
 };
 
 export const fetchRepos = () => {
   return fetch(reposURL)
-    .then((response) => response.json())
+    .then(handleReposne(mockedRepos))
     .catch(() => mockedRepos);
 };
 
