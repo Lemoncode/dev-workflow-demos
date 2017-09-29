@@ -1,12 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {openable} from "../recompose-demo/openable";
 
-const MemberListItem = ({member}) => (
-  <li>
+// const MemberListItem = ({member}) => (
+//   <li>
+//       <img src={member.avatar_url} width={30} height={30}/>
+//       <span>{member.login}</span>
+//   </li>
+// );
+
+//TODO WJ: Talk about this if time available
+const MemberListItem = openable(({isOpen, toggleOpen, member}) => (
+  <li key={member.login}>
       <img src={member.avatar_url} width={30} height={30}/>
-      <span>{member.login}</span>
-  </li>  
-);
+
+      <div>
+        <span onClick={toggleOpen}>{member.login}</span>
+        {isOpen && (
+          <div>{member.description}</div>
+        )}
+      </div>
+  </li>
+));
 
 const RepoListItem = ({repo}) => (
   <li>
