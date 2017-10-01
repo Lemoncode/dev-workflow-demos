@@ -1,146 +1,189 @@
 # Sample scope
 
-Now that we have introduced redux, we realized we have to add a new feature to our component, but we want to focus first on UI, api calls rather than start with
-the whole React / Redux  plumbing.
+We assume that Functional Components are best components - hence we want to change our Class to function.
 
-What can we do? We will:
-
-  - Rename OrganizationContainer to InnerOrganization.
-  - Create a wrapper component that will contain the mocked entry, and that will instantiate InnerOrganizationContainer.
-  - Pass the new properties via OwnProps.
-  - Update the component.
-  - Are we done? Time to add redux support... (next sample)
-
-
-# Steps
-
-- Let's start by renaming our _OrganizationContainer_ to _InnerOrganizationContainer_ and remove the _export_ keyword
-
+*src/pods/organization/component.js*
 ```diff
+-    export class OrganizationComponent extends Component {
 
-- export const OrganizationContainer = connect(mapStateToProps,
-+ export const InnerOrganizationContainer = connect(mapStateToProps,
-                                             mapDispatchToProps,
-                                            )(OrganizationComponent);
+-    componentDidMount() {
+-        this.props.fetchMembers();
+-        this.props.fetchRepos();
+-    }
+-
+-    render() {    
+-        return (
+-        <div>
+-            <ul>
+-            {
+-            this.props.members.map((member) =>
+-            <MemberListItem key={member.id} member={member} />
+-            )
+-            }
+-            </ul>
+-            <br/>
+-            <ul>
+-            {
+-            this.props.repos.map((repo) =>
+-            <RepoListItem key={repo.id} repo={repo} />
+-            )
+-            }
+-            </ul>      
+-        </div>
+-        );
+-    }
+-    }
 
-- export default OrganizationContainer;
++ const Organization = ({members, repos}) => (
++      <div>
++          <ul>
++              {
++                  members.map((member) =>
++                      <MemberListItem key={member.id} member={member} />
++                  )
++              }
++          </ul>
++          <br/>
++          <ul>
++              {
++                  repos.map((repo) =>
++                      <RepoListItem key={repo.id} repo={repo} />
++                  )
++              }
++          </ul>
++      </div>
++  );
 ```
 
-- Now let's add a temporary container, we will call it _OrganizationContainer_
 
-_./src/pods/organization/container_
+This way we have FC but no longer have `componentDidMount` hook.
+
+So in *pods/organization/container.js*
+
+We change
+
+```diff javascript
++ import {compose, lifecycle} from 'recompose'
+
+- export const OrganizationContainer = connect(mapStateToProps, mapDispatchToProps)(OrganizationComponent);
+
++ export const OrganizationContainer = compose(
++     connect(mapStateToProps, mapDispatchToProps),
++     lifecycle({
++         componentDidMount() {
++             this.props.fetchMembers();
++             this.props.fetchRepos();
++         }
++     }),
++ )(OrganizationComponent);
+```
+
+Attaching lifecycle hoc with our expected `componentDidMount` hook. To the container, making the container logic for fetching data separate from our component ui logic.
+
+If we wanted additionally to add loaded while there are pending fetches we could write code like this
 
 ```javascript
-// Temporary container once we add redux support we will remove it
-export class OrganizationContainer extends Component {
-  constructor(props) {
-    super(props);
+ //components/showLoader.js
+ const Loader = () => <div>Loading</div>;
 
-    this.state = {
-      repos: [],
-    }
-  }
-
-  fetchRepos = () => {
-    this.setState({
-      repos: [
-        {name: "my fake repo A"},
-        {name: "my fake repo B"},
-      ],
-    });
-  }
-
-  render() {
-    <InnerOrganizationComponent repos={this.state.repos}  fetchRepos={this.fetchRepos}/>
-  }
-}
-```
-
-
-
-- Now we can inject the property to the _innerOrganizationComponent_ via own props.
-
-_./src/pods/organization/container.js_
-```diff
-export default OrganizationContainer;
-
-- const mapStateToProps = (state) => ({
-+ const mapStateToProps = (state, ownProps) => ({
-+  ...ownProps  
-  members: state.organization,
-});
+ const showLoader = (test) => branch(
+     test,
+     renderComponent(Loader)
+ );
 
 ```
 
-- Now let's go the Organization presentational component and add the new property and call back:
-
-_./src/pods/organization/component.js_
-
-```diff
-OrganizationComponent.propTypes = {
-  members : PropTypes.array.isRequired,
-  fetchMembers : PropTypes.func.isRequired,
-+  repos : PropTypes.array.isRequired,
-+  fetchRepos : PropTypes.func.isRequired,  
-}
+With usage:
+```javascript
+export const OrganizationContainer = compose(
+   connect(mapStateToProps, mapDispatchToProps),
+   lifecycle({
+       componentDidMount() {
+           this.props.fetchMembers();
+           this.props.fetchRepos();
+       }
+   }),
+)(OrganizationComponent);
 ```
 
-- Let's call _fetchRepos_ on the _ComponentDidMount_ as we did with _fetchMembers()_
+------------------
 
+We have just improved the example with removal of hooks methods from ui component. But What if you had inner state to manage.
 
-_./src/pods/organization/component.js_
+`recompose` has also hoc for that `withState` and `withStateHandler`.
 
-```diff
-  componentDidMount() {
-    this.props.fetchMembers();
-+    this.props.fetchRepos();
-  }
+```typescript
+declare function withState (
+  stateName: string,
+  stateUpdaterName: string,
+  initialState: any | (props: Object) => any
+): HigherOrderComponent
 ```
 
-- Let's add a _RepoListItem_ simple component
-
-_./src/pods/organization/component.js_
+Which is shown in example *pods\recompose-demo\cardExampleRecompose.js* That is the result of refactoring with recompose  *pods\recompose-demo\cardExample.js* 
 
 ```javascript
-const RepoListItem = ({repo}) => (
-  <li>
-      <span>{repo.name}</span>
-  </li>  
+import * as React from "react";
+import {withState} from "recompose";
+
+const TitledCard = ({isOpen, setOpen, title, text}) => (
+    <Card>
+        <Title toggleOpen={() => setOpen(!isOpen)} title={title}/>
+        <Body isOpen={isOpen}>{text}</Body>
+    </Card>
+);
+
+export default withState("isOpen", "setOpen", false)(TitledCard)
+```
+
+In short you pass `stateKey` that of the innerState. You pass name of the function that is setter for given field. And as a third argument initialValue. 
+
+
+If you dislake creating a toggleOpen function handlers that has a logic of toggling the state we can use `withStateHandlers`
+
+```typescript
+declare function withStateHandlers (
+  initialState: Object | (props: Object) => any,
+  stateUpdaters: {
+    [key: string]: (state:Object, props:Object) => (...payload: any[]) => Object
+  }
+): HigherOrderComponent
+```
+
+and create
+
+*pods\recompose-demo\openable.js*
+
+```javascript
+import {withStateHandlers} from "recompose";
+
+export const openable = withStateHandlers(
+  // Initial state
+  {
+    isOpen: false,
+  }, {
+    // Handler creator -> {...props, ...state}
+    toggleOpen: ({isOpen, ...restProps}) =>
+      //handler - it's result will be used to call setState of newly created hoc.
+      () => ({
+        isOpen: !isOpen
+      }),
+  }
 );
 ```
+In this example `toggleOpen()` will mean `this.setState({isOpen: !isOpen})`
 
-- Finally let's create a new unordered list and display the list of repos.
+Essentially allowing for
 
-_./src/pods/organization/component.js_
+```jsx
+const TitledCard = ({isOpen, toggleOpen, title, text}) => (
+    <Card>
+        <Title toggleOpen={toggleOpen} title={title}/>
+        <Body isOpen={isOpen}>{text}</Body>
+    </Card>
+);
 
-```diff
-export class OrganizationComponent extends Component {
-
-  componentDidMount() {
-    this.props.fetchMembers();
-  }
-
-  render() {    
-    return (
-+     <div>      
-        <ul>
-        {
-          this.props.members.map((member) => 
-          <MemberListItem key={member.id} repo={member} />
-          )
-        }
-        </ul>
-+       </br>        
-+       <ul>
-+       {
-+         this.props.repos.map((repo) => 
-+         <RepoListItem key={repo.id} member={repo} />
-+        )
-+       }
-+      </ul>
-+    </div>      
-    );
-  }
-}
-
+export default openable(TitledCard);
 ```
+
+With same result as previous solution, but more clean and composable approach. That gives you reusable 'openable' innerStateHandler, that you can use to add behavior of openClose to any component. Essentially allowing for Functional Components with InnerState.
